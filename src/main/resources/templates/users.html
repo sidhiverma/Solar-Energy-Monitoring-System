@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | SolarFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: #f5f7f4; color: #20342b; }
+        .layout { display: flex; min-height: 100vh; }
+        aside { width: 235px; flex-shrink: 0; background: #103b2c; color: white; padding: 30px 20px; }
+        .brand { font: 800 23px Manrope, sans-serif; margin: 0 0 45px 8px; }
+        .brand span { color: #d8f27a; }
+        .nav-label { color: #91aa9c; font-size: 10px; letter-spacing: 2px; margin: 0 10px 15px; }
+        nav { display: grid; gap: 8px; }
+        nav a { color: #bdcec4; text-decoration: none; padding: 13px; border-radius: 10px; font-size: 13px; }
+        nav a:hover, nav a.active { background: #286047; color: white; }
+        nav a.active { box-shadow: inset 3px 0 #d8f27a; }
+        main { flex: 1; min-width: 0; padding: 38px; }
+        .crumb { color: #859188; font-size: 12px; margin-bottom: 12px; }
+        h1, h2 { font-family: Manrope, sans-serif; }
+        h1 { font-size: 30px; letter-spacing: -1px; }
+        .subtitle { color: #859188; font-size: 13px; margin: 9px 0 28px; line-height: 1.6; }
+        .summary { background: #174c3a; color: white; padding: 23px 26px; border-radius: 16px; margin-bottom: 25px; }
+        .summary small { color: #d8f27a; letter-spacing: 1.5px; font-weight: 700; }
+        .summary h2 { margin-top: 10px; font-size: 21px; }
+        .summary p { margin-top: 8px; color: #d1e0d6; font-size: 12px; line-height: 1.7; }
+        .card { background: white; border: 1px solid #e9eee9; border-radius: 15px; margin-bottom: 25px; overflow: hidden; }
+        .card-head { padding: 22px; border-bottom: 1px solid #e9eee9; }
+        .card-head h2 { font-size: 16px; }
+        .card-head p { color: #859188; font-size: 12px; margin-top: 6px; }
+        form { padding: 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #dfe7df; border-radius: 9px; background: #fff; font: inherit; font-size: 12px; }
+        input:focus, select:focus { outline: 2px solid #b9d8bd; border-color: #174c3a; }
+        button { background: #174c3a; color: white; border: 0; border-radius: 9px; padding: 12px 18px; cursor: pointer; font-weight: 700; font-size: 12px; }
+        button:hover { background: #286047; }
+        .form-action { display: flex; align-items: end; }
+        .table-wrap { overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; text-align: left; white-space: nowrap; }
+        th { background: #fafbf9; color: #859188; font-size: 10px; text-transform: uppercase; letter-spacing: .7px; }
+        th, td { padding: 16px 22px; border-bottom: 1px solid #eef1ed; font-size: 12px; }
+        tbody tr:last-child td { border-bottom: 0; }
+        .role { display: inline-block; background: #eef3ee; color: #466351; border-radius: 20px; padding: 6px 10px; font-size: 10px; font-weight: 700; }
+        .edit { color: #174c3a; font-size: 11px; font-weight: 700; text-decoration: none; padding: 7px 11px; border: 1px solid #dfe9df; border-radius: 8px; }
+        .edit:hover { background: #e5f2e9; }
+        .message { margin: 0 22px 18px; padding: 12px; background: #e9f6eb; color: #277344; border-radius: 8px; font-size: 12px; }
+        .empty { padding: 25px; text-align: center; color: #859188; }
+        .back { display: inline-block; margin-top: 5px; color: #174c3a; font-size: 12px; font-weight: 700; text-decoration: none; }
+        @media(max-width: 850px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; padding: 20px; }
+            .brand { margin-bottom: 20px; }
+            nav { display: flex; overflow-x: auto; }
+            nav a { white-space: nowrap; }
+            main { padding: 24px 16px; }
+            form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside>
+        <div class="brand">Solar<span>Flow</span> ☀</div>
+        <div class="nav-label">WORKSPACE</div>
+        <nav>
+            <a href="/admin">▦ &nbsp; Dashboard</a>
+            <a class="active" href="/admin/users">♙ &nbsp; User Management</a>
+            <a href="/admin/devices">⌘ &nbsp; Device Management</a>
+            <a href="/homeowner">⌂ &nbsp; Homeowner View</a>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="crumb">Workspace / User Management</div>
+        <h1>User Management</h1>
+        <p class="subtitle">Manage platform accounts, review user roles, and update registered users.</p>
+
+        <section class="summary">
+            <small>SOLARFLOW CONTROL CENTER</small>
+            <h2>The right access for every user.</h2>
+            <p>Register accounts and maintain user details from one organized workspace.</p>
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2>Add a new user</h2>
+                <p>Enter the account details below.</p>
+            </div>
+            <form th:action="@{/admin/users/add}" method="post">
+                <div>
+                    <label for="name">Full name</label>
+                    <input id="name" name="name" placeholder="Enter full name" required>
+                </div>
+                <div>
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email" placeholder="name@example.com" required>
+                </div>
+                <div>
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required>
+                        <option value="Homeowner">Homeowner</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-action">
+                    <button type="submit">＋ Add User</button>
+                </div>
+            </form>
+            <p class="message" th:if="${message}" th:text="${message}"></p>
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2>Registered users</h2>
+                <p>Accounts currently stored in your system.</p>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr><th>User ID</th><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}">1</td>
+                        <td th:text="${user.name}">User Name</td>
+                        <td th:text="${user.email}">user@example.com</td>
+                        <td><span class="role" th:text="${user.role}">Homeowner</span></td>
+                        <td>
+                            <a class="edit" th:href="@{/admin/users/edit/{id}(id=${user.id})}">Edit ↗</a>
+                            <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post"
+                                  style="display:inline; padding:0; margin-left:5px;"
+                                  onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                <button type="submit" style="background:#fff0ee;color:#b44335;padding:7px 10px;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${users == null or #lists.isEmpty(users)}">
+                        <td colspan="5" class="empty">No users registered yet. Add your first user above.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <a class="back" href="/admin">← Back to Admin Dashboard</a>
+    </main>
+</div>
+</body>
+</html>

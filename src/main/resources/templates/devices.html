@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Management | SolarFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: #f5f7f4; color: #20342b; }
+        .layout { display: flex; min-height: 100vh; }
+        aside { width: 235px; flex-shrink: 0; background: #103b2c; color: white; padding: 30px 20px; }
+        .brand { font: 800 23px Manrope, sans-serif; margin: 0 0 45px 8px; }
+        .brand span { color: #d8f27a; }
+        .nav-label { color: #91aa9c; font-size: 10px; letter-spacing: 2px; margin: 0 10px 15px; }
+        nav { display: grid; gap: 8px; }
+        nav a { color: #bdcec4; text-decoration: none; padding: 13px; border-radius: 10px; font-size: 13px; }
+        nav a:hover, nav a.active { background: #286047; color: white; }
+        nav a.active { box-shadow: inset 3px 0 #d8f27a; }
+        main { flex: 1; min-width: 0; padding: 38px; }
+        .crumb { color: #859188; font-size: 12px; margin-bottom: 12px; }
+        h1, h2 { font-family: Manrope, sans-serif; }
+        h1 { font-size: 30px; letter-spacing: -1px; }
+        .subtitle { color: #859188; font-size: 13px; margin: 9px 0 28px; line-height: 1.6; }
+        .summary { background: #174c3a; color: white; padding: 23px 26px; border-radius: 16px; margin-bottom: 25px; }
+        .summary small { color: #d8f27a; letter-spacing: 1.5px; font-weight: 700; }
+        .summary h2 { margin-top: 10px; font-size: 21px; }
+        .summary p { margin-top: 8px; color: #d1e0d6; font-size: 12px; }
+        .card { background: white; border: 1px solid #e9eee9; border-radius: 15px; margin-bottom: 25px; overflow: hidden; }
+        .card-head { padding: 22px; border-bottom: 1px solid #e9eee9; }
+        .card-head h2 { font-size: 16px; }
+        .card-head p { color: #859188; font-size: 12px; margin-top: 6px; }
+        form { padding: 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #dfe7df; border-radius: 9px; background: #fff; font: inherit; font-size: 12px; }
+        input:focus, select:focus { outline: 2px solid #b9d8bd; border-color: #174c3a; }
+        .field { min-width: 0; }
+        button { background: #174c3a; color: white; border: 0; border-radius: 9px; padding: 12px 18px; cursor: pointer; font-weight: 700; font-size: 12px; }
+        button:hover { background: #286047; }
+        .form-action { display: flex; align-items: end; }
+        .table-wrap { overflow-x: auto; }
+        table { border-collapse: collapse; width: 100%; text-align: left; white-space: nowrap; }
+        th { background: #fafbf9; color: #859188; font-size: 10px; text-transform: uppercase; letter-spacing: .7px; }
+        th, td { padding: 16px 22px; border-bottom: 1px solid #eef1ed; font-size: 12px; }
+        tbody tr:last-child td { border-bottom: 0; }
+        .status { background: #e9f6eb; color: #277344; border-radius: 20px; padding: 6px 10px; font-size: 10px; font-weight: 700; }
+        .back { display: inline-block; margin-top: 5px; color: #174c3a; font-size: 12px; font-weight: 700; text-decoration: none; }
+        .message { margin: 0 22px 18px; padding: 12px; background: #e9f6eb; color: #277344; border-radius: 8px; font-size: 12px; }
+        .empty { padding: 25px; text-align: center; color: #859188; }
+        @media(max-width: 850px) {
+            .layout { flex-direction: column; }
+            aside { width: 100%; padding: 20px; }
+            .brand { margin-bottom: 20px; }
+            nav { display: flex; overflow-x: auto; }
+            nav a { white-space: nowrap; }
+            main { padding: 24px 16px; }
+            form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside>
+        <div class="brand">Solar<span>Flow</span> ☀</div>
+        <div class="nav-label">WORKSPACE</div>
+        <nav>
+            <a href="/admin">▦ &nbsp; Dashboard</a>
+            <a href="/admin/users">♙ &nbsp; User Management</a>
+            <a class="active" href="/admin/devices">⌘ &nbsp; Device Management</a>
+            <a href="/homeowner">⌂ &nbsp; Homeowner View</a>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="crumb">Workspace / Device Management</div>
+        <h1>Device Management</h1>
+        <p class="subtitle">Register and manage solar monitoring devices connected to your platform.</p>
+
+        <section class="summary">
+            <small>SOLARFLOW CONTROL CENTER</small>
+            <h2>Keep every connection in view.</h2>
+            <p>Register devices, track their locations, and review their current reported status.</p>
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2>Register a new device</h2>
+                <p>Enter the device details below.</p>
+            </div>
+
+            <form th:action="@{/admin/devices/add}" method="post">
+                <div class="field">
+                    <label for="deviceId">Device ID</label>
+                    <input id="deviceId" name="deviceId" placeholder="e.g. SOL-001" required>
+                </div>
+                <div class="field">
+                    <label for="location">Location</label>
+                    <input id="location" name="location" placeholder="e.g. Rooftop" required>
+                </div>
+                <div class="field">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="form-action">
+                    <button type="submit">＋ Register Device</button>
+                </div>
+            </form>
+            <p class="message" th:if="${message}" th:text="${message}"></p>
+        </section>
+
+        <section class="card">
+            <div class="card-head">
+                <h2>Registered devices</h2>
+                <p>All devices saved in your system.</p>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr><th>Device ID</th><th>Location</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="device : ${devices}">
+                        <td><strong th:text="${device.deviceId}">SOL-001</strong></td>
+                        <td th:text="${device.location}">Rooftop</td>
+                        <td><span class="status" th:text="${device.status}">Online</span></td>
+                        <td>
+                            <a class="back" th:href="@{/admin/devices/edit/{id}(id=${device.id})}">Edit →</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${devices == null or #lists.isEmpty(devices)}">
+                        <td colspan="4" class="empty">No devices registered yet. Add your first device above.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <a class="back" href="/admin">← Back to Admin Dashboard</a>
+    </main>
+</div>
+</body>
+</html>

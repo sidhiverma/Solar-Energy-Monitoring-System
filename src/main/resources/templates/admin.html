@@ -1,0 +1,921 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SolarFlow</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green: #174c3a;
+            --green-dark: #103b2c;
+            --green-light: #e5f2e9;
+            --lime: #d8f27a;
+            --bg: #f5f7f4;
+            --white: #ffffff;
+            --text: #20342b;
+            --muted: #859188;
+            --border: #e9eee9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 245px;
+            background: var(--green-dark);
+            color: white;
+            padding: 30px 19px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px;
+            margin-bottom: 49px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            background: var(--lime);
+            color: var(--green-dark);
+            border-radius: 14px;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 21px;
+            letter-spacing: -0.8px;
+        }
+
+        .brand-name span {
+            color: var(--lime);
+        }
+
+        .nav-label {
+            color: #91aa9c;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.7px;
+            padding: 0 12px;
+            margin-bottom: 13px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-decoration: none;
+            color: #bdcec4;
+            padding: 13px 14px;
+            border-radius: 11px;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #286047;
+            color: white;
+        }
+
+        .nav a.active {
+            box-shadow: inset 3px 0 var(--lime);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .support-card {
+            background: #1b4937;
+            border: 1px solid #315b47;
+            border-radius: 14px;
+            padding: 17px;
+            margin-bottom: 22px;
+        }
+
+        .support-card strong {
+            font-size: 13px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .support-card p {
+            font-size: 11px;
+            line-height: 1.7;
+            color: #bdcec4;
+            margin-bottom: 14px;
+        }
+
+        .support-card a {
+            color: var(--lime);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile {
+            border-top: 1px solid #315443;
+            padding: 20px 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .avatar {
+            height: 39px;
+            width: 39px;
+            border-radius: 50%;
+            background: var(--lime);
+            color: var(--green-dark);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .profile-info span {
+            display: block;
+            font-size: 10px;
+            color: #a6bcae;
+            margin-top: 4px;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px 36px 40px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .breadcrumb {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 9px;
+        }
+
+        .breadcrumb span {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        h1 {
+            font-size: clamp(24px, 3vw, 31px);
+            letter-spacing: -1.2px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .date-pill {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #65746a;
+        }
+
+        .primary-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            background: var(--green);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 17px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .primary-btn:hover {
+            background: #246348;
+            transform: translateY(-1px);
+        }
+
+        /* Welcome banner */
+        .welcome {
+            background: var(--green);
+            color: white;
+            border-radius: 19px;
+            padding: 28px 31px;
+            margin-bottom: 27px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .welcome::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: 85px;
+            top: -145px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            box-shadow: 0 0 0 30px rgba(255,255,255,0.035),
+            0 0 0 60px rgba(255,255,255,0.025);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            color: var(--lime);
+            margin-bottom: 11px;
+        }
+
+        .welcome h2 {
+            font-size: clamp(20px, 2.5vw, 26px);
+            letter-spacing: -0.7px;
+            margin-bottom: 9px;
+        }
+
+        .welcome p {
+            color: #d1e0d6;
+            font-size: 12px;
+            line-height: 1.7;
+            max-width: 480px;
+        }
+
+        .welcome-mark {
+            position: relative;
+            z-index: 1;
+            width: 86px;
+            height: 86px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.09);
+            border: 1px solid rgba(255,255,255,0.14);
+            display: grid;
+            place-items: center;
+            font-size: 42px;
+            flex-shrink: 0;
+        }
+
+        /* Stats */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 17px;
+        }
+
+        .section-heading h2 {
+            font-size: 17px;
+            letter-spacing: -0.4px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 31px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 21px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            transition: 0.2s;
+            min-width: 0;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(23,76,58,0.06);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 19px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #78857b;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--green-light);
+            font-size: 19px;
+        }
+
+        .stat-value {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(25px, 3vw, 32px);
+            font-weight: 800;
+            letter-spacing: -1.2px;
+        }
+
+        .stat-note {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 8px;
+        }
+
+        .stat-note strong {
+            color: var(--green);
+        }
+
+        /* Tables */
+        .table-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            padding: 21px 23px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-header h3 {
+            font-size: 15px;
+        }
+
+        .table-header p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .table-link {
+            color: var(--green);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        thead {
+            background: #fafbf9;
+        }
+
+        th {
+            padding: 14px 23px;
+            color: #89958c;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        td {
+            padding: 16px 23px;
+            font-size: 12px;
+            border-top: 1px solid #f0f3ef;
+        }
+
+        tbody tr:hover {
+            background: #fbfcfa;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: #e8f1e8;
+            color: var(--green);
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: #31463a;
+        }
+
+        .user-email {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .role-pill {
+            display: inline-block;
+            background: #eef3ee;
+            color: #466351;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #e9f6eb;
+            color: #277344;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .status-pill::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b9c5c;
+        }
+
+        .edit-link {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 7px 11px;
+            border: 1px solid #dfe9df;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .edit-link:hover {
+            background: var(--green-light);
+        }
+
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer {
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            color: #98a39a;
+            font-size: 10px;
+        }
+
+        @media (max-width: 1050px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                padding: 25px 22px;
+            }
+
+            .stats {
+                gap: 11px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .app {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .brand {
+                margin-bottom: 18px;
+            }
+
+            .nav-label,
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .nav {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .nav a {
+                flex-shrink: 0;
+                padding: 10px 12px;
+            }
+
+            .nav a.active {
+                box-shadow: inset 0 -3px var(--lime);
+            }
+
+            .main {
+                padding: 23px 15px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+                margin-bottom: 24px;
+            }
+
+            .top-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .welcome {
+                padding: 23px;
+            }
+
+            .welcome-mark {
+                width: 60px;
+                height: 60px;
+                font-size: 29px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 19px;
+            }
+
+            .table-header {
+                padding: 18px;
+            }
+
+            th, td {
+                padding: 13px 16px;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .welcome-mark {
+                display: none;
+            }
+
+            .date-pill {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">☀</div>
+            <div class="brand-name">Solar<span>Flow</span></div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <nav class="nav">
+            <a href="/admin" class="active">
+                <span class="nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="/admin/users">
+                <span class="nav-icon">♙</span>
+                User Management
+            </a>
+
+            <a href="/admin/devices">
+                <span class="nav-icon">⌘</span>
+                Device Management
+            </a>
+
+            <a href="/homeowner">
+                <span class="nav-icon">⌂</span>
+                Homeowner View
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="support-card">
+                <strong>Building a greener future</strong>
+                <p>Monitor your solar ecosystem and keep everything running smoothly.</p>
+                <a href="/homeowner">Explore dashboard →</a>
+            </div>
+
+            <div class="profile">
+                <div class="avatar">A</div>
+                <div class="profile-info">
+                    <strong>Administrator</strong>
+                    <span>System Manager</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <div class="breadcrumb">Workspace / <span>Admin Dashboard</span></div>
+                <h1>Admin Overview</h1>
+                <p class="subtitle">
+                    Manage users, monitor connected devices, and keep your solar system organized.
+                </p>
+            </div>
+
+            <div class="top-actions">
+                <div class="date-pill">☀ &nbsp; Solar Management</div>
+                <a href="/admin/users" class="primary-btn">＋ Manage Users</a>
+            </div>
+        </header>
+
+        <!-- WELCOME BANNER -->
+        <section class="welcome">
+            <div class="welcome-content">
+                <div class="eyebrow">SOLARFLOW CONTROL CENTER</div>
+                <h2>Your energy ecosystem, at a glance.</h2>
+                <p>
+                    Welcome to your administration workspace. Manage registered users,
+                    review device statuses, and oversee your solar monitoring platform
+                    from one place.
+                </p>
+            </div>
+            <div class="welcome-mark">☀</div>
+        </section>
+
+        <!-- STATISTICS -->
+        <section>
+            <div class="section-heading">
+                <div>
+                    <h2>System Overview</h2>
+                    <p>A quick snapshot of your registered resources.</p>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Registered Users</span>
+                        <div class="stat-icon">♙</div>
+                    </div>
+                    <div class="stat-value"
+                         th:text="${users != null ? #lists.size(users) : 0}">0</div>
+                    <div class="stat-note"><strong>●</strong> Accounts in the system</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Registered Devices</span>
+                        <div class="stat-icon">⌘</div>
+                    </div>
+                    <div class="stat-value"
+                         th:text="${devices != null ? #lists.size(devices) : 0}">0</div>
+                    <div class="stat-note"><strong>●</strong> Devices in the system</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span class="stat-label">Platform Status</span>
+                        <div class="stat-icon">✳</div>
+                    </div>
+                    <div class="stat-value" style="font-size: 25px;">Operational</div>
+                    <div class="stat-note"><strong>●</strong> Dashboard available</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USER TABLE -->
+        <section class="table-card">
+            <div class="table-header">
+                <div>
+                    <h3>User Management</h3>
+                    <p>Review the users registered on your platform.</p>
+                </div>
+                <a href="/admin/users" class="table-link">Manage users →</a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Account</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar"
+                                     th:text="${user.name != null and !user.name.isEmpty() ? #strings.toUpperCase(#strings.substring(user.name, 0, 1)) : 'U'}">U</div>
+                                <div>
+                                    <div class="user-name" th:text="${user.name}">User Name</div>
+                                    <div class="user-email" th:text="${user.email}">user@email.com</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="role-pill" th:text="${user.role}">Homeowner</span>
+                        </td>
+
+                        <td>
+                            <span class="status-pill">Registered</span>
+                        </td>
+
+                        <td>
+                            <a class="edit-link"
+                               th:href="@{/admin/users/edit/{id}(id=${user.id})}">
+                                Edit ↗
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${users == null or #lists.isEmpty(users)}">
+                        <td colspan="4" class="empty">
+                            No users found yet. Registered users will appear here.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- DEVICE TABLE -->
+        <section class="table-card">
+            <div class="table-header">
+                <div>
+                    <h3>Device Management</h3>
+                    <p>Review registered solar monitoring devices and their locations.</p>
+                </div>
+                <a href="/admin/devices" class="table-link">Manage devices →</a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="device : ${devices}">
+                        <td>
+                            <strong th:text="${device.deviceId}">SOL-001</strong>
+                        </td>
+                        <td th:text="${device.location}">Rooftop</td>
+                        <td>
+                            <span class="status-pill" th:text="${device.status}">Online</span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${devices == null or #lists.isEmpty(devices)}">
+                        <td colspan="3" class="empty">
+                            No devices registered yet. Registered devices will appear here.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span>© 2026 SolarFlow · Solar Energy Monitoring System</span>
+            <span>Designed for smarter, cleaner energy ☀</span>
+        </footer>
+
+    </main>
+</div>
+</body>
+</html>

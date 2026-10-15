@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Solar Device</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7f4;
+            color: #24352b;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .card {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        h1 {
+            color: #167344;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccd5ce;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: #167344;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        a {
+            color: #167344;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="card">
+    <h1>Edit Solar Device</h1>
+
+    <form th:action="@{/admin/devices/update/{id}(id=${device.id})}"
+          method="post">
+
+        <label>Device ID</label>
+        <input type="text" name="deviceId"
+               th:value="${device.deviceId}" required>
+
+        <label>Location</label>
+        <input type="text" name="location"
+               th:value="${device.location}" required>
+
+        <label>Status</label>
+        <select name="status" required>
+            <option value="ACTIVE"
+                    th:selected="${device.status == 'ACTIVE'}">ACTIVE</option>
+            <option value="INACTIVE"
+                    th:selected="${device.status == 'INACTIVE'}">INACTIVE</option>
+            <option value="MAINTENANCE"
+                    th:selected="${device.status == 'MAINTENANCE'}">MAINTENANCE</option>
+        </select>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <p><a href="/admin">← Back to Admin Dashboard</a></p>
+</div>
+</body>
+</html>

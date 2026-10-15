@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User | Solar Energy Monitoring</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7f4;
+            margin: 0;
+            padding: 30px;
+            color: #24352b;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #167344;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccd8cf;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 12px;
+            background: #167344;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #105a34;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            color: #167344;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Edit User</h1>
+    <p>Update the registered user's information.</p>
+
+    <form th:action="@{/admin/users/update/{id}(id=${user.id})}"
+          method="post">
+
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name"
+               th:value="${user.name}" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email"
+               th:value="${user.email}" required>
+
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+            <option value="ADMIN"
+                    th:selected="${user.role == 'ADMIN'}">Admin</option>
+            <option value="HOMEOWNER"
+                    th:selected="${user.role == 'HOMEOWNER'}">Homeowner</option>
+        </select>
+
+        <button type="submit">Update User</button>
+    </form>
+
+    <a class="back" th:href="@{/admin}">← Back to Admin Dashboard</a>
+</div>
+</body>
+</html>

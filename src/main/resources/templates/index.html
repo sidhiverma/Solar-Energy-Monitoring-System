@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Energy Monitoring System</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f3f7f4;
+            margin: 0;
+            padding: 30px;
+            color: #24352b;
+        }
+
+        h1 {
+            color: #167344;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 210px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        .card h3 {
+            color: #52665a;
+        }
+
+        .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #167344;
+        }
+    </style>
+</head>
+
+<body>
+<h1>☀️ Solar Energy Monitoring System</h1>
+<p>Monitor your home's solar energy production and consumption.</p>
+
+<div class="dashboard">
+    <div class="card">
+        <h3>Solar Production</h3>
+        <p class="value">5.8 kWh</p>
+        <p>Energy generated today</p>
+    </div>
+
+    <div class="card">
+        <h3>Energy Consumption</h3>
+        <p class="value">3.2 kWh</p>
+        <p>Energy used today</p>
+    </div>
+
+    <div class="card">
+        <h3>Battery Level</h3>
+        <p class="value">78%</p>
+        <p>Available battery charge</p>
+    </div>
+
+    <div class="card">
+        <h3>System Status</h3>
+        <p class="value">Online</p>
+        <p>All systems operational</p>
+    </div>
+</div>
+
+<p style="margin-top: 30px; color: #68766c;">
+    Demo dashboard — values are sample data, not live solar readings.
+</p>
+</body>
+</html>
